@@ -41,8 +41,10 @@ def _complex_to_3tuple(c, transform_=transform.IDENTITY):
 
 def _convert_line_to_path(line):
     aspath = shape.Path(style=line.get_style())
-    aspath.appendMoveToPath(float(line.get_x1()), float(line.get_y1()), relative=False)
-    aspath.appendLineToPath(float(line.get_x2()), float(line.get_y2()), relative=False)
+    aspath.appendMoveToPath(float(line.get_x1()),
+                            float(line.get_y1()), relative=False)
+    aspath.appendLineToPath(float(line.get_x2()),
+                            float(line.get_y2()), relative=False)
     return aspath
 
 
@@ -53,7 +55,8 @@ def _convert_rect_to_path(rect):
         rect.set_y(0)
     aspath = shape.Path(style=rect.get_style())
     edgePoints = rect.getEdgePoints()
-    aspath.appendMoveToPath(edgePoints[-1][0], edgePoints[-1][1], relative=False)
+    aspath.appendMoveToPath(
+        edgePoints[-1][0], edgePoints[-1][1], relative=False)
     for p in rect.getEdgePoints():
         aspath.appendLineToPath(p[0], p[1], relative=False)
     return aspath
@@ -175,18 +178,23 @@ def __append_path_to_dxf(element, msp, debug, context):
                 return _point_on_arc(theta, segment.center, segment.radius)
 
             for segment_index in range(0, num_segments):
-                segment_mults = [segment_index, segment_index + 1 / 3, segment_index + 2 / 3, segment_index + 1]
+                segment_mults = [segment_index, segment_index +
+                                 1 / 3, segment_index + 2 / 3, segment_index + 1]
                 segment_angles = [segment.theta + delta_segment_inc * x for x in
                                   segment_mults]
-                fit_points = [_complex_to_3tuple(point_on_arc(a), context.transform) for a in segment_angles]
+                fit_points = [_complex_to_3tuple(point_on_arc(
+                    a), context.transform) for a in segment_angles]
                 if segment_index == 0:
-                    fit_points[0] = _complex_to_3tuple(segment.start, context.transform)
+                    fit_points[0] = _complex_to_3tuple(
+                        segment.start, context.transform)
 
                 if segment == num_segments - 1:
-                    fit_points[-1] = _complex_to_3tuple(segment.end, context.transform)
+                    fit_points[-1] = _complex_to_3tuple(
+                        segment.end, context.transform)
 
                 # msp.add_spline(fit_points=fit_points)
-                line = msp.add_lwpolyline(points=fit_points)  # todo use splines
+                line = msp.add_lwpolyline(
+                    points=fit_points)  # todo use splines
                 line.set_dxf_attrib('layer', context.layer)
 
         else:
@@ -255,7 +263,8 @@ class ElementContext(object):
     def element(self, element):
         transform_ = self.transform
         if hasattr(element, 'get_transform') and element.get_transform():
-            transform_ = transform_.mult(transform.parse(element.get_transform()))
+            transform_ = transform_.mult(
+                transform.parse(element.get_transform()))
 
         layer = 'default'
         if hasattr(element, 'getAttribute') and element.get_class():
@@ -275,10 +284,10 @@ def create_layers(dwg, layer_to_style):
     if 'default' not in layer_to_style:
         layer_to_style['default'] = {'color': '#000000'}
 
-    for name, styles in layer_to_style.items():
-        layer = dwg.layers.create(name=name, dxfattribs={})
-        if 'color' in styles:
-            layer.set_color(colortrans.rgb2short(styles['color']))
+    # for name, styles in layer_to_style.items():
+    #    layer = dwg.layers.create(name=name, dxfattribs={})
+    #    if 'color' in styles:
+    #        layer.set_color(colortrans.rgb2short(styles['color']))
 
 
 def convert(svg_in, dxf_out, layer_to_style=None, debug_out=None):

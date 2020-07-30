@@ -1,6 +1,32 @@
+# VSCode
+.vscode/*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+py_src/displacement_*.png
+py_src/motion_*.png
+py_src/voronoi.png
+py_src/field/*
+script/field/*
+
+script/tmp/*
+
+# Doc
+*.pdf
+*.html
+
+# temp
+temp/*
+temp_*/*
+*/temp_*/*
+
+# tar
+*.tar.gz
+*.zip
+
+# img
+*/~*.pptx
 
 # C extensions
 *.so

@@ -1,6 +1,7 @@
 from __future__ import division, print_function
 import math
 import unittest
+from functools import reduce
 
 
 def __mult(t0, t1):
